@@ -1,32 +1,39 @@
 # Langton's Ant Simulation with Pheromone-Based Multi-Agent Behavior
 
-A Python implementation of an enhanced **Langton's Ant** cellular automaton featuring **multiple interacting ants**, **pheromone-based memory**, and **probabilistic decision-making**. The project extends the classic two-dimensional Turing Machine model by introducing self-recognition, cross-ant interference, and pheromone decay, resulting in rich emergent behaviors.
+An interactive Python simulation of an enhanced **Langton's Ant** cellular automaton featuring **two autonomous ants**, **pheromone-based memory**, and **probabilistic movement**. Built using **Pygame** and **NumPy**, this project demonstrates how simple local rules can produce complex emergent behavior.
 
 ---
 
 ## Overview
 
-Langton's Ant is a well-known deterministic cellular automaton where an ant moves across an infinite grid by following simple local rules. Despite the simplicity of these rules, the ant exhibits surprisingly complex global behavior.
+Langton's Ant is a two-dimensional Turing machine that moves on a grid by following simple deterministic rules. Despite these simple rules, the ant eventually exhibits highly complex and unpredictable behavior.
 
-This project expands the original model by introducing **two autonomous ants** that communicate indirectly through **pheromone trails**. Each ant remembers its own path, may become confused by another ant's trail, and adapts its movement based on probabilistic rules whose influence gradually fades over time.
+This project extends the classical Langton's Ant by introducing:
 
-The result is a dynamic simulation demonstrating how **simple local interactions**, **memory**, and **stochastic behavior** can generate complex collective patterns.
+- Two independent ants
+- Individual pheromone trails
+- Self-pheromone recognition
+- Cross-pheromone interference
+- Pheromone decay over time
+- Probabilistic movement decisions
+
+The simulation provides an interesting demonstration of **cellular automata**, **agent-based modeling**, and **emergent systems**.
 
 ---
 
 ## Features
 
-- Two independent Langton's Ant agents
-- Dynamic black and white cellular grid
+- Two independently moving Langton's Ants
+- Real-time simulation using **Pygame**
+- Randomized initial positions and directions
 - Standard Langton's Ant movement rules
 - Individual pheromone trails for each ant
-- Self-pheromone recognition (memory effect)
-- Cross-pheromone interference between ants
-- Linear pheromone decay over time
+- Self-pheromone recognition with probabilistic movement
+- Cross-pheromone confusion between ants
 - Automatic pheromone replacement
-- Probabilistic movement decisions
-- Real-time graphical visualization using Pygame
-- Object-Oriented implementation for modularity and extensibility
+- Linear pheromone decay
+- Grid visualization with color updates
+- Object-Oriented implementation
 
 ---
 
@@ -34,77 +41,87 @@ The result is a dynamic simulation demonstrating how **simple local interactions
 
 ### Standard Movement
 
-**At a White Cell**
-- Turn 90° clockwise
-- Flip the cell to black
-- Deposit pheromone
-- Move forward one cell
+When an ant lands on a **white cell**:
 
-**At a Black Cell**
-- Turn 90° counter-clockwise
+- Turn left (counter-clockwise)
+- Flip the cell to black
+- Deposit its pheromone
+- Move forward one step
+
+When an ant lands on a **black cell**:
+
+- Turn right (clockwise)
 - Flip the cell to white
-- Deposit pheromone
-- Move forward one cell
+- Deposit its pheromone
+- Move forward one step
+
+---
 
 ### Pheromone Behavior
 
 #### Self-Pheromone
-When an ant encounters **its own pheromone**:
-- 80% probability of moving straight ahead
-- 20% probability of applying the standard turning rule
+
+If an ant encounters its own pheromone:
+
+- Moves straight with high probability
+- Otherwise follows the standard Langton's Ant rule
 
 #### Cross-Pheromone
-When an ant encounters **the other ant's pheromone**:
-- 20% probability of moving straight
-- 80% probability of following the standard turning rule
+
+If an ant encounters the other ant's pheromone:
+
+- Has a higher probability of following the standard turning rule
+- Lower probability of moving straight
 
 #### Pheromone Replacement
-- Only one pheromone may exist on a cell.
-- Depositing a new pheromone removes any existing pheromone on that cell.
+
+Whenever an ant deposits a pheromone on a cell, any existing pheromone at that location is replaced.
 
 #### Pheromone Decay
-- Pheromone influence decreases linearly over time.
-- After approximately five movement steps, the pheromone completely loses its influence.
 
----
+Each pheromone has a limited lifetime.
 
-## Project Structure
-
-```text
-Langtons-Ant/
-│
-├── main.py               # Simulation entry point
-├── ant.py                # Ant movement logic
-├── grid.py               # Grid representation
-├── pheromone.py          # Pheromone management
-├── constants.py          # Simulation parameters
-├── utils.py              # Helper functions
-├── requirements.txt
-└── README.md
-```
-
-> **Note:** Folder names may vary depending on your implementation.
+Its influence decreases over time and is automatically removed after approximately five movement steps.
 
 ---
 
 ## Technologies Used
 
 - Python 3
+- NumPy
 - Pygame
-- Object-Oriented Programming (OOP)
+
+---
+
+## Project Structure
+
+```
+.
+├── langtons_ant.py
+├── requirements.txt
+└── README.md
+```
+
+*(Rename `langtons_ant.py` to match your actual filename.)*
 
 ---
 
 ## Installation
 
-Clone the repository:
+Clone the repository
 
 ```bash
 git clone https://github.com/yourusername/langtons-ant.git
 cd langtons-ant
 ```
 
-Install the required dependencies:
+Install the required libraries
+
+```bash
+pip install pygame numpy
+```
+
+or
 
 ```bash
 pip install -r requirements.txt
@@ -114,11 +131,39 @@ pip install -r requirements.txt
 
 ## Running the Simulation
 
+Run the Python file:
+
 ```bash
-python main.py
+python langtons_ant.py
 ```
 
-A simulation window will open where both ants move simultaneously while leaving pheromone trails and modifying the environment.
+A Pygame window will open displaying the simulation.
+
+---
+
+## Implementation Details
+
+The project is implemented using two primary classes:
+
+### Ground
+
+Responsible for:
+
+- Maintaining the grid state
+- Tracking pheromone locations
+- Managing pheromone decay
+- Removing expired pheromones
+
+### Ant
+
+Responsible for:
+
+- Position and direction
+- Standard Langton movement
+- Turning logic
+- Pheromone interactions
+- Probabilistic movement
+- Boundary checking
 
 ---
 
@@ -126,84 +171,63 @@ A simulation window will open where both ants move simultaneously while leaving 
 
 For every simulation step:
 
-1. Read the current cell color.
+1. Read the current grid cell.
 2. Check for an existing pheromone.
-3. Compute movement probability based on:
-   - Self pheromone
-   - Cross pheromone
-   - Pheromone age
-4. Decide whether to move straight or apply the standard turning rule.
-5. Flip the cell color.
-6. Deposit a new pheromone.
-7. Replace any existing pheromone.
-8. Update pheromone decay.
-9. Move to the next cell.
+3. If no pheromone exists:
+   - Apply the standard Langton rule.
+4. If the ant detects its own pheromone:
+   - Move straight with high probability.
+   - Otherwise apply the standard rule.
+5. If the ant detects another ant's pheromone:
+   - Follow modified probabilities.
+6. Flip the current cell color.
+7. Deposit a new pheromone.
+8. Update pheromone timers.
+9. Remove expired pheromones.
 10. Render the updated grid.
 
 ---
 
-## Emergent Behavior
-
-Although each ant follows only simple local rules, the interaction between:
-
-- Deterministic movement
-- Probabilistic decisions
-- Pheromone memory
-- Pheromone decay
-- Indirect communication
-
-produces complex emergent patterns including:
-
-- Chaotic exploration
-- Recurring loops
-- Trail formation
-- Interference regions
-- Cooperative and competitive movement
-
-This simulation demonstrates how sophisticated global behavior can emerge from simple decentralized rules.
-
----
-
-## Applications
-
-This project demonstrates concepts used in:
+## Concepts Demonstrated
 
 - Cellular Automata
-- Artificial Life (ALife)
-- Swarm Intelligence
+- Langton's Ant
+- Emergent Behavior
 - Multi-Agent Systems
-- Agent-Based Modeling
-- Complex Adaptive Systems
-- Stigmergy
+- Swarm Intelligence
+- Stochastic Decision Making
+- Object-Oriented Programming
+- Pygame Visualization
 
 ---
 
 ## Future Improvements
 
-- Configurable number of ants
-- Adjustable pheromone decay functions
-- Variable movement probabilities
+- Support for multiple ants
+- Adjustable simulation speed
+- Infinite scrolling grid
+- Customizable pheromone decay functions
 - Heatmap visualization of pheromone intensity
+- Pause and resume controls
+- Save and load simulation states
 - Performance optimization for larger grids
-- Save and replay simulation states
-- Interactive simulation controls
-- Statistical analysis of ant trajectories
 
 ---
 
 ## Sample Output
 
-The simulation visualizes:
+The simulation displays:
 
-- Dynamically changing black and white cells
-- Independent ant movement
-- Pheromone interactions
-- Emergent patterns over time
+- A dynamically changing black-and-white grid
+- Two ants represented by different colors
+- Real-time movement across the grid
+- Emergent patterns created through pheromone interactions
+- Live movement counter
 
-> Add screenshots or GIFs here.
+> Add screenshots or GIFs of the simulation here.
 
 ---
 
 ## License
 
-This project is released for educational and research purposes. Feel free to modify and extend the simulation.
+This project was developed for educational purposes and to explore emergent behavior in cellular automata. Feel free to modify and extend the simulation.
