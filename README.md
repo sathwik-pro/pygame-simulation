@@ -224,7 +224,7 @@ The simulation displays:
 - Emergent patterns created through pheromone interactions
 - Live movement counter
 
-> Add screenshots or GIFs of the simulation here.
+
 
 ---
 
